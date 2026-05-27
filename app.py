@@ -6,7 +6,6 @@ from PIL import Image, ImageDraw
 st.set_page_config(page_title="HoloHand VFX", layout="wide")
 
 st.title("Real-Time Hand Tracking Hologram System")
-st.write("AI-powered holographic hand tracking")
 
 camera = st.camera_input("Open Camera")
 
@@ -15,9 +14,9 @@ hands = mp_hands.Hands(static_image_mode=True)
 
 if camera:
     image = Image.open(camera)
-    img_array = np.array(image)
+    image_np = np.array(image)
 
-    results = hands.process(img_array)
+    results = hands.process(image_np)
 
     draw = ImageDraw.Draw(image)
 
@@ -29,6 +28,9 @@ if camera:
                 x = int(landmark.x * w)
                 y = int(landmark.y * h)
 
-                draw.ellipse((x-5, y-5, x+5, y+5), fill="lime")
+                draw.ellipse(
+                    (x - 5, y - 5, x + 5, y + 5),
+                    fill="lime"
+                )
 
-    st.image(image, caption="Hand Tracking Result")
+    st.image(image)
