@@ -19,15 +19,11 @@ if camera:
     cx = width // 2
     cy = height // 2
 
-    # BIG glowing hologram rings
-    ring_colors = [
-        (0, 255, 255),
-        (0, 220, 255),
-        (120, 255, 255)
-    ]
+    # HUGE neon hologram rings
+    for radius in [100, 180, 260]:
 
-    for radius in [80, 140, 200]:
-        for glow in range(8):
+        # Glow effect
+        for glow in range(25, 0, -5):
             draw.ellipse(
                 (
                     cx - radius - glow,
@@ -35,23 +31,23 @@ if camera:
                     cx + radius + glow,
                     cy + radius + glow
                 ),
-                outline=ring_colors[glow % len(ring_colors)],
-                width=5
+                outline=(0, 255, 255),
+                width=8
             )
 
-    # Bright hologram beams
-    for angle in range(0, 360, 15):
-        x = cx + int(np.cos(np.radians(angle)) * 250)
-        y = cy + int(np.sin(np.radians(angle)) * 250)
+    # Strong light beams
+    for angle in range(0, 360, 10):
+        x = cx + int(np.cos(np.radians(angle)) * 320)
+        y = cy + int(np.sin(np.radians(angle)) * 320)
 
         draw.line(
             [(cx, cy), (x, y)],
             fill=(0, 255, 255),
-            width=4
+            width=6
         )
 
-    # Center glowing orb
-    for r in range(50, 5, -5):
+    # Bright center hologram orb
+    for r in range(70, 5, -5):
         draw.ellipse(
             (
                 cx - r,
@@ -63,4 +59,4 @@ if camera:
         )
 
     st.image(img, use_container_width=True)
-    st.success("Holo VFX Applied Successfully ✅")
+    st.success("HOLO VFX ACTIVE ✅")
