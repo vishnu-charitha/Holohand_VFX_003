@@ -3,7 +3,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import streamlit as st
-from streamlit_webrtc import webrtc_streamer, VideoProcessorBase
+from streamlit_webrtc import webrtc_streamer, VideoProcessorBase,WebRtcMode
 
 from mediapipe.tasks.python.vision import (
     HandLandmarker,
@@ -255,12 +255,23 @@ class HoloProcessor(VideoProcessorBase):
         )
 
 
+from streamlit_webrtc import webrtc_streamer, WebRtcMode
+
 webrtc_streamer(
-    key="holohand",
-    video_processor_factory=
-    HoloProcessor,
+    key="holo",
+    mode=WebRtcMode.SENDRECV,
+    rtc_configuration={
+        "iceServers": [
+            {
+                "urls": [
+                    "stun:stun.l.google.com:19302"
+                ]
+            }
+        ]
+    },
     media_stream_constraints={
         "video": True,
-        "audio": False
-    }
+        "audio": False,
+    },
+    video_processor_factory=HoloProcessor
 )
