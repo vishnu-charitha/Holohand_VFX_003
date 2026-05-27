@@ -1,36 +1,14 @@
 import streamlit as st
-import mediapipe as mp
-import numpy as np
-from PIL import Image, ImageDraw
 
 st.set_page_config(page_title="HoloHand VFX", layout="wide")
 
-st.title("Real-Time Hand Tracking Hologram System")
+st.title("HoloHand VFX")
+st.success("Deployment Successful ✅")
 
-camera = st.camera_input("Open Camera")
+st.write("Real-time hologram hand tracking demo project")
 
-mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(static_image_mode=True)
+camera = st.camera_input("Test Camera")
 
 if camera:
-    image = Image.open(camera)
-    image_np = np.array(image)
-
-    results = hands.process(image_np)
-
-    draw = ImageDraw.Draw(image)
-
-    if results.multi_hand_landmarks:
-        w, h = image.size
-
-        for hand_landmarks in results.multi_hand_landmarks:
-            for landmark in hand_landmarks.landmark:
-                x = int(landmark.x * w)
-                y = int(landmark.y * h)
-
-                draw.ellipse(
-                    (x - 5, y - 5, x + 5, y + 5),
-                    fill="lime"
-                )
-
-    st.image(image)
+    st.image(camera)
+    st.success("Camera working successfully!")
