@@ -49,23 +49,23 @@ def draw_holo(frame, x, y):
 
     overlay = frame.copy()
 
-    # HOLO RINGS
-    cv2.circle(overlay, (x, y), 110, (255,255,0), 3)
-    cv2.circle(overlay, (x, y), 85, (255,255,0), 2)
-    cv2.circle(overlay, (x, y), 60, (255,255,255), 2)
-    cv2.circle(overlay, (x, y), 35, (255,255,0), 2)
+    # Hologram rings
+    cv2.circle(overlay, (x, y), 110, (255, 255, 0), 3)
+    cv2.circle(overlay, (x, y), 85, (255, 255, 0), 2)
+    cv2.circle(overlay, (x, y), 60, (255, 255, 255), 2)
+    cv2.circle(overlay, (x, y), 35, (255, 255, 0), 2)
 
-    # MANY RAYS
+    # Dense rays around hand
     for angle in range(0, 360, 5):
 
         px = int(
-            x + 170*np.cos(
+            x + 170 * np.cos(
                 np.radians(angle)
             )
         )
 
         py = int(
-            y + 170*np.sin(
+            y + 170 * np.sin(
                 np.radians(angle)
             )
         )
@@ -74,21 +74,21 @@ def draw_holo(frame, x, y):
             overlay,
             (x, y),
             (px, py),
-            (255,255,0),
+            (255, 255, 0),
             1
         )
 
-    # ORBIT DOTS
+    # Orbit dots
     for angle in range(0, 360, 8):
 
         px = int(
-            x + 95*np.cos(
+            x + 95 * np.cos(
                 np.radians(angle)
             )
         )
 
         py = int(
-            y + 95*np.sin(
+            y + 95 * np.sin(
                 np.radians(angle)
             )
         )
@@ -97,16 +97,16 @@ def draw_holo(frame, x, y):
             overlay,
             (px, py),
             5,
-            (255,255,0),
+            (255, 255, 0),
             -1
         )
 
-    # CENTER GLOW
+    # Center glow
     cv2.circle(
         overlay,
         (x, y),
         12,
-        (255,255,255),
+        (255, 255, 255),
         -1
     )
 
@@ -168,50 +168,96 @@ while True:
                 y
             )
 
-    # ENERGY RAYS BETWEEN 2 HANDS
+    # ENERGY BETWEEN TWO HANDS
     if len(hand_positions) == 2:
 
         (x1, y1), (x2, y2) = hand_positions
 
         overlay = frame.copy()
 
-        # thick glow line
-        for thickness in [18, 12, 8, 4]:
+        # Big glowing beam
+        for thickness in [
+            40, 32, 24, 18,
+            12, 8, 5, 3
+        ]:
+
             cv2.line(
                 overlay,
                 (x1, y1),
                 (x2, y2),
-                (255,255,0),
+                (255, 255, 0),
                 thickness
             )
 
-        # lightning particles
-        for i in range(20):
+        # Dense particles
+        for i in range(120):
 
-            t = i / 20
+            t = i / 120
 
-            px = int(x1 + t * (x2 - x1))
-            py = int(y1 + t * (y2 - y1))
+            px = int(
+                x1 + t * (x2 - x1)
+            )
 
-            offset_x = np.random.randint(-10, 10)
-            offset_y = np.random.randint(-10, 10)
+            py = int(
+                y1 + t * (y2 - y1)
+            )
+
+            jitter_x = np.random.randint(
+                -20, 20
+            )
+
+            jitter_y = np.random.randint(
+                -20, 20
+            )
+
+            radius = np.random.randint(
+                2, 7
+            )
 
             cv2.circle(
                 overlay,
                 (
-                    px + offset_x,
-                    py + offset_y
+                    px + jitter_x,
+                    py + jitter_y
                 ),
-                3,
-                (255,255,255),
+                radius,
+                (255, 255, 255),
                 -1
+            )
+
+        # Extra sci-fi rays
+        mid_x = (x1 + x2) // 2
+        mid_y = (y1 + y2) // 2
+
+        for angle in range(0, 360, 12):
+
+            ray_x = int(
+                mid_x +
+                150 * np.cos(
+                    np.radians(angle)
+                )
+            )
+
+            ray_y = int(
+                mid_y +
+                150 * np.sin(
+                    np.radians(angle)
+                )
+            )
+
+            cv2.line(
+                overlay,
+                (mid_x, mid_y),
+                (ray_x, ray_y),
+                (255, 255, 0),
+                2
             )
 
         frame = cv2.addWeighted(
             overlay,
-            0.75,
+            0.9,
             frame,
-            0.25,
+            0.1,
             0
         )
 
