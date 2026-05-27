@@ -200,6 +200,7 @@ class HoloProcessor(VideoProcessorBase):
 webrtc_streamer(
     key="holo",
     mode=WebRtcMode.SENDRECV,
+
     rtc_configuration={
         "iceServers": [
             {
@@ -209,9 +210,17 @@ webrtc_streamer(
             }
         ]
     },
+
     media_stream_constraints={
-        "video": True,
+        "video": {
+            "width": 640,
+            "height": 480,
+            "frameRate": 30,
+        },
         "audio": False,
     },
+
+    async_processing=True,
+
     video_processor_factory=HoloProcessor,
 )
