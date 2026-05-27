@@ -73,4 +73,4 @@ if camera:
                     -1
                 )
 
-    st.image(frame, width="stretch")
+st.image(frame, use_container_width=True)
