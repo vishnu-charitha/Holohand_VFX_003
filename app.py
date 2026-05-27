@@ -1,31 +1,34 @@
 import streamlit as st
-import cv2
 import mediapipe as mp
 import numpy as np
+from PIL import Image, ImageDraw
 
 st.set_page_config(page_title="HoloHand VFX", layout="wide")
 
 st.title("Real-Time Hand Tracking Hologram System")
-st.write("AI-powered holographic hand tracking using OpenCV + MediaPipe")
+st.write("AI-powered holographic hand tracking")
 
 camera = st.camera_input("Open Camera")
 
+mp_hands = mp.solutions.hands
+hands = mp_hands.Hands(static_image_mode=True)
+
 if camera:
-    file_bytes = np.asarray(bytearray(camera.read()), dtype=np.uint8)
-    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    image = Image.open(camera)
+    img_array = np.array(image)
 
-    mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands()
+    results = hands.process(img_array)
 
-    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    result = hands.process(rgb)
+    draw = ImageDraw.Draw(image)
 
-    if result.multi_hand_landmarks:
-        for hand_landmarks in result.multi_hand_landmarks:
+    if results.multi_hand_landmarks:
+        w, h = image.size
+
+        for hand_landmarks in results.multi_hand_landmarks:
             for landmark in hand_landmarks.landmark:
-                h, w, _ = image.shape
                 x = int(landmark.x * w)
                 y = int(landmark.y * h)
-                cv2.circle(image, (x, y), 5, (0, 255, 0), -1)
 
-    st.image(image, channels="BGR")
+                draw.ellipse((x-5, y-5, x+5, y+5), fill="lime")
+
+    st.image(image, caption="Hand Tracking Result")
